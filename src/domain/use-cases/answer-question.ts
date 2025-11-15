@@ -1,14 +1,14 @@
-import { Answer } from '../entities/answer';
+import { Answer } from "../entities/answer";
 
 interface AnswerQuestionRequest {
   instructorId: string;
   questionId: string;
-  content: string
+  content: string;
 }
 
 export class AnswerQuestion {
-  execute({instructorId, questionId, content}: AnswerQuestionRequest) {
-    const answer = new Answer(content)
+  execute({ instructorId, questionId, content }: AnswerQuestionRequest) {
+    const answer = new Answer({ content, authorId: instructorId, questionId });
 
     return answer;
   }
