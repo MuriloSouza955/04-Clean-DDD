@@ -1,5 +1,6 @@
 import { Answer } from "../entities/answer";
-import type { AnswersRepository } from "../repositories/answers-repositories";
+import { AnswersRepository } from "../repositories/answers-repositories";
+import { UniqueEntityId } from "../../core/entities/unique-entity-id";
 
 interface AnswerQuestionRequest {
   instructorId: string;
@@ -10,7 +11,11 @@ interface AnswerQuestionRequest {
 export class AnswerQuestion {
   constructor(private answersRepository: AnswersRepository) {}
   async execute({ instructorId, questionId, content }: AnswerQuestionRequest) {
-    const answer = new Answer({ content, authorId: instructorId, questionId });
+    const answer = Answer.create({
+      content,
+      authorId: new UniqueEntityId(instructorId),
+      questionId: new UniqueEntityId(questionId)
+    });
 
     await this.answersRepository.create(answer);
 
