@@ -1,6 +1,6 @@
-import { Entity } from "../../core/entities/entity";
-import type { UniqueEntityId } from "../../core/entities/unique-entity-id";
-import type { Optional } from "../../core/types/optional";
+import { Entity } from "@/core/entities/entity";
+import type { UniqueEntityId } from "@/core/entities/unique-entity-id";
+import type { Optional } from "@/core/types/optional";
 
 interface AnswerProps {
   content: string;
@@ -36,6 +36,15 @@ export class Answer extends Entity<AnswerProps> {
     .substring(0, 120)
     .trimEnd()
     .concat("...");
+  }
+
+  private touch() {
+    this.props.updatedAt = new Date();
+  }
+
+  set content(value: string) {
+    this.props.content = value;
+    this.touch();
   }
 
   static create(
