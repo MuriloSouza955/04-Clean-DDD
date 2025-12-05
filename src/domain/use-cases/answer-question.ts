@@ -1,11 +1,11 @@
-import { Answer } from "../entities/answer";
-import { AnswersRepository } from "../repositories/answers-repositories";
-import { UniqueEntityId } from "@/core/entities/unique-entity-id";
+import { Answer } from '../entities/answer'
+import { AnswersRepository } from '../repositories/answers-repositories'
+import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 
 interface AnswerQuestionRequest {
-  instructorId: string;
-  questionId: string;
-  content: string;
+  instructorId: string
+  questionId: string
+  content: string
 }
 
 export class AnswerQuestion {
@@ -14,11 +14,11 @@ export class AnswerQuestion {
     const answer = Answer.create({
       content,
       authorId: new UniqueEntityId(instructorId),
-      questionId: new UniqueEntityId(questionId)
-    });
+      questionId: new UniqueEntityId(questionId),
+    })
 
-    await this.answersRepository.create(answer);
+    await this.answersRepository.create(answer)
 
-    return answer;
+    return answer
   }
 }
