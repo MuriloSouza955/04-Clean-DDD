@@ -1,6 +1,6 @@
 import { Answer } from '../../enterprise/entities/answer'
-import { AnswersRepository } from '../../../repositories/answers-repositories'
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
+import { AnswersRepository } from '@/domain/forum/application/repositories/answers-repositories'
 
 interface AnswerQuestionRequest {
   instructorId: string
@@ -8,9 +8,18 @@ interface AnswerQuestionRequest {
   content: string
 }
 
-export class AnswerQuestion {
+interface AnswerQuestionResponse {
+  answer: Answer
+}
+
+export class AnswerQuestionUseCase {
   constructor(private answersRepository: AnswersRepository) {}
-  async execute({ instructorId, questionId, content }: AnswerQuestionRequest) {
+
+  async execute({
+    instructorId,
+    questionId,
+    content,
+  }: AnswerQuestionRequest): Promise<AnswerQuestionResponse> {
     const answer = Answer.create({
       content,
       authorId: new UniqueEntityId(instructorId),
@@ -18,7 +27,8 @@ export class AnswerQuestion {
     })
 
     await this.answersRepository.create(answer)
-
-    return answer
+    return {
+      answer,
+    }
   }
 }
