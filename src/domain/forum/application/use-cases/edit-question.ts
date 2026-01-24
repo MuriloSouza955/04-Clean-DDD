@@ -1,4 +1,4 @@
-import { QuestionRepository } from '@/domain/forum/application/repositories/question-repository'
+import { QuestionsRepository } from '@/domain/forum/application/repositories/question-repository'
 import type { Question } from '../../enterprise/entities/question'
 
 interface EditQuestionUseCaseRequest {
@@ -13,7 +13,7 @@ interface EditQuestionUseCaseResponse {
 }
 
 export class EditQuestionUseCase {
-  constructor(private questionRepository: QuestionRepository) {}
+  constructor(private questionsRepository: QuestionsRepository) {}
 
   async execute({
     questionId,
@@ -22,7 +22,7 @@ export class EditQuestionUseCase {
     content,
   }: EditQuestionUseCaseRequest): Promise<EditQuestionUseCaseResponse> {
 
-    const question = await this.questionRepository.findById(questionId)
+    const question = await this.questionsRepository.findById(questionId)
 
     if (!question) {
       throw new Error('Question not found')
@@ -35,7 +35,7 @@ export class EditQuestionUseCase {
     question.title = title
     question.content = content
 
-    await this.questionRepository.save(question)
+    await this.questionsRepository.save(question)
 
     return {
       question,
