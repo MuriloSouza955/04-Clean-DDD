@@ -1,16 +1,17 @@
+import { right, type Either } from '@/core/either'
 import { Answer } from '../../enterprise/entities/answer'
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { AnswersRepository } from '@/domain/forum/application/repositories/answers-repository'
 
-interface AnswerQuestionRequest {
+interface AnswerQuestionUseCaseRequest {
   instructorId: string
   questionId: string
   content: string
 }
 
-interface AnswerQuestionResponse {
+type AnswerQuestionUseCaseResponse = Either<null, {
   answer: Answer
-}
+}>
 
 export class AnswerQuestionUseCase {
   constructor(private answersRepository: AnswersRepository) {}
@@ -19,7 +20,7 @@ export class AnswerQuestionUseCase {
     instructorId,
     questionId,
     content,
-  }: AnswerQuestionRequest): Promise<AnswerQuestionResponse> {
+  }: AnswerQuestionUseCaseRequest): Promise<AnswerQuestionUseCaseResponse> {
     const answer = Answer.create({
       content,
       authorId: new UniqueEntityId(instructorId),
@@ -27,8 +28,8 @@ export class AnswerQuestionUseCase {
     })
 
     await this.answersRepository.create(answer)
-    return {
+    return right({
       answer,
-    }
+    })
   }
 }
