@@ -1,6 +1,9 @@
 import { AnswersRepository } from '@/domain/forum/application/repositories/answers-repository'
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
-import type { QuestionsRepository } from '../repositories/question-repository'
+import { QuestionsRepository } from '../repositories/question-repository'
+import { left, right, type Either } from '@/core/either'
+import { NotAllowedError } from './errors/not-allowed-error'
+import { ResourceNotFoundError } from './errors/resource-not-found-error'
 import type { Question } from '../../enterprise/entities/question'
 
 interface ChooseQuestionBestAnswerCaseRequest {
@@ -8,9 +11,12 @@ interface ChooseQuestionBestAnswerCaseRequest {
   answerId: string
 }
 
-interface ChooseQuestionBestAnswerCaseResponse {
-  question: Question
-}
+type ChooseQuestionBestAnswerCaseResponse = Either<
+  ResourceNotFoundError | NotAllowedError,
+  {
+    question: Question
+  }
+>
 
 export class ChooseQuestionBestAnswerCase {
   constructor(
@@ -25,25 +31,25 @@ export class ChooseQuestionBestAnswerCase {
     const answer = await this.answersRepository.findById(answerId)
 
     if (!answer) {
-      throw new Error('Answer not found')
+      return left(new ResourceNotFoundError())
     }
 
     const question = await this.questionsRepository.findById(answer.questionId.toString())
 
     if (!question) {
-      throw new Error('Question not found')
+      return left(new ResourceNotFoundError())
     }
 
     if (authorId !== question.authorId.toString()) {
-      throw new Error('Not allowed to choose the best answer')
+      return left(new NotAllowedError())
     }
 
     question.bestAnswerId = new UniqueEntityId(answer.id.toString())
 
     await this.questionsRepository.save(question)
 
-    return {
+    return right({
       question,
-    }
+    })
   }
 }
