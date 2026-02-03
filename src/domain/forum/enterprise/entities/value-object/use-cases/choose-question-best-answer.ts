@@ -1,10 +1,10 @@
 import { AnswersRepository } from '@/domain/forum/application/repositories/answers-repository'
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
-import { QuestionsRepository } from '../repositories/question-repository'
+import { QuestionsRepository } from '@/domain/forum/application/repositories/question-repository'
 import { left, right, type Either } from '@/core/either'
 import { NotAllowedError } from './errors/not-allowed-error'
 import { ResourceNotFoundError } from './errors/resource-not-found-error'
-import type { Question } from '../../enterprise/entities/question'
+import { Question } from '../../../entities/question'
 
 interface ChooseQuestionBestAnswerCaseRequest {
   authorId: string

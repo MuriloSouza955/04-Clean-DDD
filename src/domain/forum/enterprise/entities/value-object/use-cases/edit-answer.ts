@@ -1,5 +1,5 @@
 import { AnswersRepository } from '@/domain/forum/application/repositories/answers-repository'
-import type { Answer } from '../../enterprise/entities/answer'
+import { Answer } from '../../../entities/answer'
 import { Either, left, right } from '@/core/either'
 import { NotAllowedError } from './errors/not-allowed-error'
 import { ResourceNotFoundError } from './errors/resource-not-found-error'
