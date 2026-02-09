@@ -1,6 +1,6 @@
 import { AnswersRepository } from '@/domain/forum/application/repositories/answers-repository'
-import { AnswerComment } from '../../enterprise/entities/answer-comment'
-import { AnswerCommentsRepository } from '../repositories/answers-comment-repository'
+import { AnswerComment } from '@/domain/forum/enterprise/entities/answer-comment'
+import { AnswerCommentsRepository } from '@/domain/forum/application/repositories/answers-comment-repository'
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { Either, left, right } from '@/core/either'
 import { ResourceNotFoundError } from './errors/resource-not-found-error'
@@ -11,12 +11,16 @@ interface CommentOnAnswerUseCaseRequest {
   content: string
 }
 
-type CommentOnAnswerUseCaseResponse = Either<ResourceNotFoundError, {
-  answerComment: AnswerComment
-}>
+type CommentOnAnswerUseCaseResponse = Either<
+  ResourceNotFoundError,
+  {
+    answerComment: AnswerComment
+  }
+>
 
 export class CommentOnAnswerUseCase {
-  constructor(private AnswersRepository: AnswersRepository,
+  constructor(
+    private AnswersRepository: AnswersRepository,
     private AnswerCommentsRepository: AnswerCommentsRepository,
   ) {}
 
@@ -40,6 +44,6 @@ export class CommentOnAnswerUseCase {
 
     return right({
       answerComment,
-    })   
+    })
   }
 }

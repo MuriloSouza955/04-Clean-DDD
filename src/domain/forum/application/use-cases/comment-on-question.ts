@@ -1,6 +1,6 @@
 import { QuestionsRepository } from '@/domain/forum/application/repositories/question-repository'
-import { QuestionComment } from '../../enterprise/entities/question-comment'
-import { QuestionCommentsRepository } from '../repositories/question-comments-repository'
+import { QuestionComment } from '@/domain/forum/enterprise/entities/question-comment'
+import { QuestionCommentsRepository } from '@/domain/forum/application/repositories/question-comments-repository'
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { Either, left, right } from '@/core/either'
 import { ResourceNotFoundError } from './errors/resource-not-found-error'
@@ -11,12 +11,16 @@ interface CommentOnQuestionUseCaseRequest {
   content: string
 }
 
-type CommentOnQuestionUseCaseResponse = Either<ResourceNotFoundError, {
-  questionComment: QuestionComment
-}>
+type CommentOnQuestionUseCaseResponse = Either<
+  ResourceNotFoundError,
+  {
+    questionComment: QuestionComment
+  }
+>
 
 export class CommentOnQuestionUseCase {
-  constructor(private questionsRepository: QuestionsRepository,
+  constructor(
+    private questionsRepository: QuestionsRepository,
     private questionCommentsRepository: QuestionCommentsRepository,
   ) {}
 
@@ -40,6 +44,6 @@ export class CommentOnQuestionUseCase {
 
     return right({
       questionComment,
-    })   
+    })
   }
 }

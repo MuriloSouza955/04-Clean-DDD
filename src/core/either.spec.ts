@@ -1,17 +1,17 @@
-import { left, right, type Either } from "./either"
+import { left, right, type Either } from './either'
 
 function doSomething(shouldSuccess: boolean): Either<string, number> {
-  if(shouldSuccess) {
+  if (shouldSuccess) {
     return right(10)
   } else {
-    return left("error")
+    return left('error')
   }
 }
 
-test("success result", () => {
+test('success result', () => {
   const result = doSomething(true)
 
-  if(result.isRight()) {
+  if (result.isRight()) {
     console.log(result.value)
   }
 
@@ -19,7 +19,7 @@ test("success result", () => {
   expect(result.isLeft()).toBe(false)
 })
 
-test("error result", () => {
+test('error result', () => {
   const result = doSomething(false)
 
   expect(result.isLeft()).toBe(true)
