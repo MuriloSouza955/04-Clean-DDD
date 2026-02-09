@@ -91,3 +91,31 @@ test/
 ├── factories/      # Factories para testes
 └── repositores/    # Implementações in-memory
 ```
+===========================
+
+# Subdomínios
+
+-Core:
+  - O que dá dinheiro
+-Supporting:
+  - Da suporte para o core funcionar
+-Generic:
+  -Voce precisa, mas não são tão importantes
+
+## Exemplos
+
+###Core
+- Compra
+- Catálogo
+- Pagamento
+- Entrega
+- Faturamento
+
+###Supporting
+- Estoque
+
+###Generic
+  - Notificações ao cliente
+  - Promoções
+  - Chat
+  
