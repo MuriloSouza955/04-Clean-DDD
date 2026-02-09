@@ -1,12 +1,13 @@
 // either = ou um ou outro
 
 // Left = Error
-export class Left <L, R>{
+export class Left<L, R> {
   readonly value: L
 
   constructor(value: L) {
     this.value = value
   }
+
   isRight(): this is Right<L, R> {
     return false
   }
@@ -17,7 +18,7 @@ export class Left <L, R>{
 }
 
 // Right = Success
-export class Right <L, R> {
+export class Right<L, R> {
   readonly value: R
 
   constructor(value: R) {
