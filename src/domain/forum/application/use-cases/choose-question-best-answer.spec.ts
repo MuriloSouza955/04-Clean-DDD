@@ -5,15 +5,21 @@ import { ChooseQuestionBestAnswerCase } from './choose-question-best-answer'
 import { InMemoryQuestionsRepository } from 'test/repositores/in-memory-questions-repository'
 import { makeQuestion } from 'test/factories/make-question'
 import { NotAllowedError } from './errors/not-allowed-error'
+import { InMemoryAnswerAttachmentsRepository } from 'test/repositores/in-memory-answer-attachments-repository'
+import { InMemoryQuestionAttachmentsRepository } from 'test/repositores/in-memory-question-attachments-repository'
 
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository
 let inMemoryAnswersRepository: InMemoryAnswersRepository
+let inMemoryAnswerAttachmentsRepository: InMemoryAnswerAttachmentsRepository
+let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository
 let sut: ChooseQuestionBestAnswerCase
 
 describe('Choose Question Best Answer', () => {
   beforeEach(() => {
-    inMemoryQuestionsRepository = new InMemoryQuestionsRepository()
-    inMemoryAnswersRepository = new InMemoryAnswersRepository()
+    inMemoryAnswerAttachmentsRepository = new InMemoryAnswerAttachmentsRepository()
+    inMemoryQuestionAttachmentsRepository = new InMemoryQuestionAttachmentsRepository()
+    inMemoryQuestionsRepository = new InMemoryQuestionsRepository(inMemoryQuestionAttachmentsRepository)
+    inMemoryAnswersRepository = new InMemoryAnswersRepository(inMemoryAnswerAttachmentsRepository)
 
     sut = new ChooseQuestionBestAnswerCase(
       inMemoryAnswersRepository,
@@ -35,7 +41,9 @@ describe('Choose Question Best Answer', () => {
       authorId: question.authorId.toString(),
     })
 
-    expect(inMemoryQuestionsRepository.items[0]?.bestAnswerId?.toString()).toEqual(answer.id.toString())
+    expect(
+      inMemoryQuestionsRepository.items[0]?.bestAnswerId?.toString(),
+    ).toEqual(answer.id.toString())
   })
   it('should not be able to chose another user question best answer.', async () => {
     const question = makeQuestion({
@@ -52,7 +60,7 @@ describe('Choose Question Best Answer', () => {
       answerId: answer.id.toString(),
       authorId: 'author-2',
     })
-    expect (result.isLeft()).toBe(true)
+    expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(NotAllowedError)
   })
 })

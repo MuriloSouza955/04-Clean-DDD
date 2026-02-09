@@ -8,7 +8,10 @@ interface DeleteAnswerUseCaseRequest {
   answerId: string
 }
 
-type DeleteAnswerUseCaseResponse = Either<ResourceNotFoundError | NotAllowedError, {}>
+type DeleteAnswerUseCaseResponse = Either<
+  ResourceNotFoundError | NotAllowedError,
+  void
+>
 
 export class DeleteAnswerUseCase {
   constructor(private answerRepository: AnswersRepository) {}
@@ -17,7 +20,6 @@ export class DeleteAnswerUseCase {
     authorId,
     answerId,
   }: DeleteAnswerUseCaseRequest): Promise<DeleteAnswerUseCaseResponse> {
-
     const answer = await this.answerRepository.findById(answerId)
 
     if (!answer) {
@@ -30,6 +32,6 @@ export class DeleteAnswerUseCase {
 
     await this.answerRepository.delete(answer)
 
-    return right({})
+    return right(undefined)
   }
 }

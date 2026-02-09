@@ -9,16 +9,15 @@ let sut: DeleteQuestionCommentUseCase
 
 describe('Delete question comment', () => {
   beforeEach(() => {
-    inMemoryQuestionCommentsRepository = new InMemoryQuestionCommentsRepository()
+    inMemoryQuestionCommentsRepository =
+      new InMemoryQuestionCommentsRepository()
 
-    sut = new DeleteQuestionCommentUseCase(
-      inMemoryQuestionCommentsRepository,
-    )
+    sut = new DeleteQuestionCommentUseCase(inMemoryQuestionCommentsRepository)
   })
 
   it('should be able to delete a question comment.', async () => {
     const questionComment = makeQuestionComment()
-    
+
     await inMemoryQuestionCommentsRepository.create(questionComment)
 
     await sut.execute({
@@ -33,15 +32,15 @@ describe('Delete question comment', () => {
     const questionComment = makeQuestionComment({
       authorId: new UniqueEntityId('author-1'),
     })
-    
+
     await inMemoryQuestionCommentsRepository.create(questionComment)
 
     const result = await sut.execute({
       questionCommentId: questionComment.id.toString(),
       authorId: 'author-2',
     })
-    
-    expect (result.isLeft()).toBe(true)
+
+    expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(NotAllowedError)
   })
 })

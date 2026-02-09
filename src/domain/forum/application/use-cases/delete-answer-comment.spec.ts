@@ -11,14 +11,12 @@ describe('Delete answer comment', () => {
   beforeEach(() => {
     inMemoryAnswerCommentsRepository = new InMemoryAnswerCommentsRepository()
 
-    sut = new DeleteAnswerCommentUseCase(
-      inMemoryAnswerCommentsRepository,
-    )
+    sut = new DeleteAnswerCommentUseCase(inMemoryAnswerCommentsRepository)
   })
 
   it('should be able to delete a answer comment.', async () => {
     const answerComment = makeAnswerComment()
-    
+
     await inMemoryAnswerCommentsRepository.create(answerComment)
 
     await sut.execute({
@@ -30,10 +28,10 @@ describe('Delete answer comment', () => {
   })
 
   it('should not be able to delete another user answer comment.', async () => {
-    const answerComment = makeAnswerComment({ 
+    const answerComment = makeAnswerComment({
       authorId: new UniqueEntityId('author-1'),
     })
-    
+
     await inMemoryAnswerCommentsRepository.create(answerComment)
 
     const result = await sut.execute({
