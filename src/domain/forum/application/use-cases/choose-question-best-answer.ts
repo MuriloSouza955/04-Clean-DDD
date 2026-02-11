@@ -2,8 +2,8 @@ import { AnswersRepository } from '@/domain/forum/application/repositories/answe
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { QuestionsRepository } from '@/domain/forum/application/repositories/question-repository'
 import { left, right, type Either } from '@/core/either'
-import { NotAllowedError } from './errors/not-allowed-error'
-import { ResourceNotFoundError } from './errors/resource-not-found-error'
+import { NotAllowedError } from '@/core/errors/errors/not-allowed-error'
+import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
 import { Question } from '@/domain/forum/enterprise/entities/question'
 
 interface ChooseQuestionBestAnswerCaseRequest {
