@@ -1,10 +1,12 @@
-# Use Cases do Fórum
+# Use Cases do Projeto
 
 Todos os use cases seguem o padrão:
 - **Input**: Objeto com parâmetros tipados
 - **Output**: `Either<Error, Success>` (Left em falha, Right em sucesso)
 
-## Perguntas (Questions)
+## Bounded Context: Forum
+
+### Perguntas (Questions)
 
 | Use Case | Descrição | Dependências |
 |----------|-----------|--------------|
@@ -15,17 +17,17 @@ Todos os use cases seguem o padrão:
 | **FetchRecentQuestionsUseCase** | Listar perguntas recentes (paginado) | QuestionsRepository |
 | **FetchQuestionCommentsUseCase** | Listar comentários de uma pergunta | QuestionCommentsRepository |
 
-## Respostas (Answers)
+### Respostas (Answers)
 
 | Use Case | Descrição | Dependências |
 |----------|-----------|--------------|
-| **AnswerQuestionUseCase** | Responder uma pergunta | AnswersRepository, QuestionsRepository |
-| **EditAnswerUseCase** | Editar resposta (apenas autor) | AnswersRepository |
+| **AnswerQuestionUseCase** | Responder uma pergunta com anexos | AnswersRepository, QuestionsRepository, AnswerAttachmentsRepository |
+| **EditAnswerUseCase** | Editar resposta e anexos (apenas autor) | AnswersRepository, AnswerAttachmentsRepository |
 | **DeleteAnswerUseCase** | Deletar resposta (apenas autor) | AnswersRepository |
 | **ChooseQuestionBestAnswerUseCase** | Marcar melhor resposta (apenas autor da pergunta) | QuestionsRepository, AnswersRepository |
 | **FetchQuestionAnswersUseCase** | Listar respostas de uma pergunta | AnswersRepository |
 
-## Comentários (Comments)
+### Comentários (Comments)
 
 | Use Case | Descrição | Dependências |
 |----------|-----------|--------------|
@@ -35,7 +37,25 @@ Todos os use cases seguem o padrão:
 | **DeleteAnswerCommentUseCase** | Deletar comentário de resposta | AnswerCommentsRepository |
 | **FetchAnswerCommentsUseCase** | Listar comentários de uma resposta | AnswerCommentsRepository |
 
+## Bounded Context: Notification
+
+| Use Case | Descrição | Dependências |
+|----------|-----------|--------------|
+| **SendNotificationUseCase** | Enviar notificação ao destinatário | NotificationsRepository |
+| **ReadNotificationUseCase** | Marcar notificação como lida | NotificationsRepository |
+
+## Subscribers (Domain Event Handlers)
+
+Os subscribers escutam eventos de domínio e executam ações (ex: enviar notificações).
+
+| Subscriber | Evento | Ação |
+|------------|--------|------|
+| **OnAnswerCreated** | AnswerCreatedEvent | Envia notificação ao autor da pergunta informando nova resposta |
+| **OnQuestionBestAnswerChosen** | QuestionBestAnswerChosenEvent | Envia notificação ao autor da resposta escolhida |
+
 ## Interfaces de Repositórios
+
+### Forum
 
 | Repositório | Métodos |
 |-------------|---------|
@@ -44,6 +64,13 @@ Todos os use cases seguem o padrão:
 | QuestionCommentsRepository | findById, findManyByQuestionId, create, delete |
 | AnswerCommentsRepository | findById, findManyByAnswerId, create, delete |
 | QuestionAttachmentsRepository | findManyByQuestionId, deleteManyByQuestionId |
+| AnswerAttachmentsRepository | findManyByAnswerId, deleteManyByAnswerId |
+
+### Notification
+
+| Repositório | Métodos |
+|-------------|---------|
+| NotificationsRepository | findById, findManyByRecipientId, create, save |
 
 ## Padrão de Erros
 

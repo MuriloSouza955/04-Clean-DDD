@@ -1,42 +1,17 @@
-# DDD (Domain-Driven-Design)
-
-Design dirigido à domínio
-
-## Domínio
-
-- Domain Experts
-  - Conversa com o stakeholder (cliente)
-  - Pessoas experts (atendente por exemplo)
-- Linguagem ubíquia
-  - ex:
-    - Para o programador:
-      - Usuário
-    - Para o domain expert
-      - Cliente
-      - Fornecedor
-      - Atendente
-      - Barman
-
-- Agregados
-- Value Objects
-- Eventos de domínio
-- Subdomínios (Bouced Context)
-- Entidades
-- Casos de uso
-
-=========================
-
 # 04 - Clean DDD
+
+> **Status: Projeto finalizado**
 
 Projeto de **Fórum de Perguntas e Respostas** construído com **Clean Architecture** e **Domain-Driven Design (DDD)**.
 
 ## Sobre o Projeto
 
 Sistema de fórum onde usuários podem:
-- Criar e gerenciar perguntas
-- Responder perguntas
+- Criar e gerenciar perguntas com anexos
+- Responder perguntas com anexos
 - Comentar em perguntas e respostas
 - Marcar a melhor resposta
+- Receber notificações ao criar respostas e ao marcar melhor resposta
 
 ## Tecnologias
 
@@ -63,31 +38,54 @@ npm run lint:fix
 
 ## Documentação
 
-- [**Arquitetura**](./docs/ARCHITECTURE.md) - Estrutura Clean DDD, camadas e conceitos
+- [**Arquitetura**](./docs/ARCHITECTURE.md) - Estrutura Clean DDD, camadas, Domain Events e conceitos
 - [**Entidades**](./docs/ENTITIES.md) - Entidades do domínio, value objects e erros
-- [**Use Cases**](./docs/USE-CASES.md) - Lista de casos de uso e repositórios
+- [**Use Cases**](./docs/USE-CASES.md) - Lista de casos de uso, subscribers e repositórios
 
 ## Conceitos DDD Abordados
 
 | Conceito | Exemplo |
 |----------|---------|
 | **Domain Experts** | Linguagem ubíqua com stakeholders |
-| **Entidades** | Question, Answer, Comment |
+| **Entidades** | Question, Answer, Comment, Notification |
 | **Value Objects** | Slug |
-| **Agregados** | Question (aggregate root) com QuestionAttachmentList |
-| **Watched List** | Rastreamento de itens adicionados/removidos |
-| **Bounded Context** | Forum (fórum de perguntas) |
+| **Agregados** | Question e Answer como aggregate roots |
+| **Watched List** | QuestionAttachmentList, AnswerAttachmentList |
+| **Bounded Context** | Forum (fórum) e Notification (notificações) |
+| **Domain Events** | AnswerCreatedEvent, QuestionBestAnswerChosenEvent |
+| **Subscribers** | OnAnswerCreated, OnQuestionBestAnswerChosen |
+| **Subdomínios** | Forum (core), Notification (supporting/generic) |
 
 ## Estrutura do Projeto
 
 ```
 src/
-├── core/           # Núcleo compartilhado (Entity, Either, WatchedList)
-└── domain/forum/   # Domínio do fórum
-    ├── application/  # Contratos (repositórios)
-    └── enterprise/   # Entidades, use cases, value objects
+├── core/                      # Núcleo compartilhado
+│   ├── entities/              # Entity, AggregateRoot, UniqueEntityId, WatchedList
+│   ├── events/                # DomainEvent, DomainEvents
+│   ├── errors/                # Erros genéricos
+│   └── repositories/         # Tipos de paginação
+│
+└── domain/
+    ├── forum/                 # Bounded Context: Fórum
+    │   ├── application/      # Repositórios, Use Cases
+    │   └── enterprise/       # Entidades, Value Objects, Events
+    │
+    └── notification/         # Bounded Context: Notificações
+        ├── appplication/     # Use Cases, Subscribers
+        └── enterprise/       # Entidade Notification
 
 test/
-├── factories/      # Factories para testes
-└── repositores/    # Implementações in-memory
+├── factories/                 # Factories para testes
+└── repositores/               # Implementações in-memory
 ```
+
+---
+
+## Conceitos DDD - Resumo
+
+- **Domain Experts**: Conversa com stakeholders; linguagem ubíqua (Cliente, Fornecedor, etc.)
+- **Subdomínios**:
+  - **Core**: O que traz valor principal (ex: Compra, Catálogo, Pagamento)
+  - **Supporting**: Dá suporte ao core (ex: Estoque)
+  - **Generic**: Necessário, mas não central (ex: Notificações, Chat, Promoções)
